@@ -8,14 +8,6 @@ import sys
 
 #Where does the video file go? It dissapears...
 
-# Python program raising
-# exceptions in a python
-# thread
-
-import ctypes
-
-
-
 class yt:
     def __init__(self, search_term=None, is_paused=False):
         self.file_title = "yt_vid"
@@ -24,7 +16,7 @@ class yt:
         self.Full_Name = f"{self.savepath}{self.file_title}.{self.format}"
 
         self.is_paused = is_paused
-        self.kill_flag = False
+        #self.kill_flag = False
         self.search_term = search_term
 
         ydl_opts = {
@@ -44,7 +36,7 @@ class yt:
         self.disc = threading.Thread(target=self.core, daemon=True)
         self.disc.start()
 
-    
+    """
     def clear(self):
         self.kill_flag = True
         self.disc.join()
@@ -53,7 +45,8 @@ class yt:
     def change_song(self, search_term=None):
         self.search_term = search_term
         self.clear()
-    
+    """
+
     def set_search_term(self, search_term):
         self.search_term = search_term
     def wait_for_search_term(self):
@@ -90,9 +83,11 @@ class yt:
         tick = 0
 
         while tick <= length:
+            """
             if self.kill_flag == True:
                 self.kill_flag = False
                 sys.exit(1)
+            """
             if self.is_paused == True:
                 time.sleep(0.1)
             else:
@@ -100,13 +95,13 @@ class yt:
                 tick +=1
         os.remove(self.Full_Name)
 
-
+"""
 jukebox = yt("radio gaga")
 time.sleep(15)
 jukebox.clear()
 jukebox.play()
 time.sleep(100)
-
+"""
 
 """
 jukebox = yt("radio gaga")
