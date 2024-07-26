@@ -10,19 +10,19 @@ class clock:
         self.volume = volume
 
     #clock
-    def now():
+    def now(self):
         return datetime.datetime.now()
-    def time():
+    def time(self):
         return datetime.datetime.now().strftime("%I:%M:%S %p")
-    def time_pretty():
+    def time_pretty(self):
         return f"{num2words(datetime.datetime.now().strftime("%I"))} {num2words(datetime.datetime.now().strftime("%M"))} {datetime.datetime.now().strftime("%p")} "
-    def time_military():
+    def time_military(self):
         return datetime.datetime.now().strftime("%H:%M%S")
-    def day():
+    def day(self):
         return datetime.datetime.now().today()
-    def date():
+    def date(self):
         return datetime.datetime.now().strftime("%m/%d/%Y")
-    def date_words():
+    def date_words(self):
         day = datetime.datetime.now().strftime("%d")
         if datetime.datetime.now().strftime("%d"[0]) == "0":
             day = datetime.datetime.now().strftime("%d"[1])

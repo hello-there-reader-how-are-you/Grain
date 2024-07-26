@@ -4,6 +4,7 @@ import time
 import os
 import yt_dlp
 import threading
+import sys
 
 #Where does the video file go? It dissapears...
 
@@ -15,6 +16,7 @@ class yt:
         self.Full_Name = f"{self.savepath}{self.file_title}.{self.format}"
 
         self.is_paused = is_paused
+        self.kill_flag = False
         self.search_term = search_term
 
         ydl_opts = {
@@ -31,9 +33,19 @@ class yt:
         self.vlc_instance = vlc.Instance()
         self.player = self.vlc_instance.media_player_new()
 
-        disc = threading.Thread(target=self.core, daemon=True)
-        disc.start()
+        self.disc = threading.Thread(target=self.core, daemon=True)
+        self.disc.start()
 
+    
+    def clear(self):
+        self.kill_flag = True
+        self.disc.join()
+        print("clear????")
+
+    def change_song(self, search_term=None):
+        self.search_term = search_term
+        self.clear()
+    
     def set_search_term(self, search_term):
         self.search_term = search_term
     def wait_for_search_term(self):
@@ -70,14 +82,24 @@ class yt:
         tick = 0
 
         while tick <= length:
+            
+            if self.kill_flag == True:
+                self.kill_flag = False
+                sys.exit()
+        
             if self.is_paused == True:
                 time.sleep(0.1)
-
             else:
                 time.sleep(0.1)
                 tick +=1
         os.remove(self.Full_Name)
 
+
+jukebox = yt("radio gaga")
+time.sleep(15)
+jukebox.clear()
+jukebox.play()
+time.sleep(100)
 
 
 """
