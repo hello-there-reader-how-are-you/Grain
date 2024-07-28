@@ -1,6 +1,6 @@
 from llama_cpp import Llama
 import time
-from banna_prompt import *
+from testing_prompt import *
 
 
 
