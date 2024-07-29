@@ -6,23 +6,26 @@ import re
 import time
 import datetime
 from calender import *
+from mail import *
 
 jukebox = yt()
 watch = clock()
 cal = calender()
+postman = mailbox()
 
 #speech = "Hey Grain, set a time for 5 seconds"
 #speech = "Play radio gaga by queen"
-llm_nlp = Llama(model_path="./models/Phi-3-mini-4k-instruct-q4.gguf")
+llm_nlp = Llama(model_path="./models/Phi-3-mini-4k-instruct-q4.gguf", n_gpu_layers=-1)
 print("\n\n\n")
 #llm_Grain = Llama(model_path="./models/dolphin-2.9.3-mistral-nemo-Q5_K_M.gguf")
 #print("\n\n\n\n\n\n")
 
 def nlp(question):
       x = llm_nlp(
-            PROMPT_INSTRUCTION.format( datetime.datetime.now().strftime("%A"), datetime.datetime.now().strftime("%m/%d/%Y"), datetime.datetime.now().strftime("%H:%M:%S"), question),
+            PROMPT_INSTRUCTION.format( datetime.datetime.now().strftime("%A"), datetime.datetime.now().strftime("%m/%d/%Y"), datetime.datetime.now().strftime("%H:%M:%S"), datetime.datetime.now().strftime("%Y-%m-%d"), question),
             max_tokens=400,
             seed=420,
+            echo=False,
             stop= ["<|end|>"],
       )["choices"][0]["text"]
       print(x)
@@ -50,7 +53,7 @@ def personality(question):
 
 def action(command):
       if type(command) != list: return
-#try:
+
       if command[0] == "Music" or command[0] == "Video":
             print("Music!")
             if command[1] == "Play":
@@ -87,19 +90,20 @@ def action(command):
                   event = booking(command[2], datetime.datetime.strptime(f"{command[3]} {command[4]}", "%Y-%m-%d %H:%M"), datetime.datetime.strptime(f"{command[3]} {command[5]}", "%Y-%m-%d %H:%M"))
                   print(event)
                   cal.schedule(event)
-      """
-      except: 
-            print("Kaput")
-            return "Kaput"
-      """
-
-
-
+      
+      if command[0] == "Email":
+            if command[1] == "Today":
+                  print(postman.emails_today())
+            if command[1] == "Unread":
+                  print(postman.unread())
       print("")
          
 
-text = "Hey grain, can you schedual an event labeled breadens birthday party for today at noon?"
+text = "Hey grain, what unread emails do I have?"
 
 action(nlp(question=text))
 
-time.sleep(7)
+time.sleep(500)
+
+
+#CMAKE_ARGS="-DGGML_METAL=on" pip install --force-reinstall --upgrade --no-cache-dir  -v "llama_cpp_python==0.2.83"    

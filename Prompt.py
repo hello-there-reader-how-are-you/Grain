@@ -12,7 +12,9 @@ The catagories and their commands are listed below.
 Catagory: Music. Commands: Play, Pause, Stop.
 Catagory: Video. Commands: Play, Pause, Stop.
 Catagory: Clock. Commands: Time, Date, Timer (must be in seconds), Alarm (must be millitary time, hour:minute).
-Catagory: Calender. Commands: Today, Schedule (formated: Name, yyyy-dd-mm, hour:minute, hour:minute.).
+Catagory: Calender. Commands: Today, Schedule (formated: Name, yyyy-mm-dd, hour:minute, hour:minute.).
+Catagory: Email. Commands: Today, Unread.
+
 
 If a User's speech does not match any commands, respond: [[[[Not A Command]]].
 
@@ -21,11 +23,13 @@ Here are some examples:
 [[[Clock, Date]]]
 [[[Clock, Timer, 1800]]]
 [[[Clock, Alarm, 1:58]]]
-[[[Calender, Schedule, Birthday Party, 2024-07-28, 17:58, 18:50]]]
+[[[Calender, Schedule, Birthday Party, {3}, 17:58, 18:50]]]
+[[[Email, Today]]]
+[[[Email, Unread]]]
 <|end|>
 
 <|user|>
-{3}
+{4}
 <|end|>
 <|assistant|>
 """

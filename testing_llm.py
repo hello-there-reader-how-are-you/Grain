@@ -4,7 +4,7 @@ from testing_prompt import *
 
 
 
-llm = Llama(model_path="./models/Phi-3-mini-4k-instruct-q4.gguf", n_gpu_layers=-1)
+llm = Llama(model_path="./models/dolphin-2.9.3-mistral-nemo-Q5_K_M.gguf", n_gpu_layers=-1)
 
 print("\n\n\n")
 def ask(question):
