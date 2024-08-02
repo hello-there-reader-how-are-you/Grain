@@ -2,16 +2,16 @@
 
 Grain is an assistant. It is not a very good one...
 
-##Done:
+## Done:
 Calender Google
 Email Google
 Clock
 Music
 
-##Half:
+## Half:
 Timers: Needs names.
 
-##Planned:
+## Planned:
 Wake word detection
 Transcription
 
