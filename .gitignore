@@ -2,3 +2,4 @@ models/
 __pycache__/
 ignore_me/
 .DS_Store
+/bark_cpp

@@ -23,6 +23,8 @@ ydl_opts = {
 
 ydl = yt_dlp.YoutubeDL(ydl_opts)
 
+def yt_dl_url(url):
+    ydl.download(url)
 
 def yt_dl(search_term):
     try: os.remove(FULL_NAME)
@@ -43,3 +45,5 @@ def yt_play(search_term):
     duration = player.get_length()/1000
     time.sleep(duration)
     os.remove(source)
+
+yt_dl_url("https://www.youtube.com/watch?v=-kwVE0DFmSM")

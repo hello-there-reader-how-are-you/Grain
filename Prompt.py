@@ -14,9 +14,10 @@ Category: Video. Commands: Play, Pause, Stop.
 Category: Clock. Commands: Time, Date, Timer (must be in seconds), Alarm (must be millitary time, hour:minute).
 Category: Calendar. Commands: Today, Schedule (formated: Name, yyyy-mm-dd, hour:minute, hour:minute.).
 Category: Email. Commands: Today, Unread.
+Category: General Info. Commands: AI (Should include answer).
+Category: Fact. Commands: Wikipedia.
 
-
-If a User's speech does not match any commands, respond: [[[[Not A Command]]].
+Be extremely careful! If a User's speech does not match any commands, respond: [[[[Not A Command]]].
 
 Here are some examples:
 [[[Music, Play, Yellow Submarine by the beatles]]]
