@@ -99,11 +99,11 @@ def action(command):
       print("")
          
 
-text = "Hey grain, what unread emails do I have?"
+text = "Command here: make an event for two days from now labled mom's celebration at 6 am"
 
 action(nlp(question=text))
 
-time.sleep(500)
+time.sleep(20)
 
 
 #CMAKE_ARGS="-DGGML_METAL=on" pip install --force-reinstall --upgrade --no-cache-dir  -v "llama_cpp_python==0.2.83"    
