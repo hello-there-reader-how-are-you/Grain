@@ -1,5 +1,5 @@
 import os
-
+#https://console.cloud.google.com/apis/dashboard?project=gifted-course-430810-q2
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
@@ -18,6 +18,7 @@ if not os.path.exists("./ignore_me"):
     with open(os.path.join("ignore_me", "this_is_where_creds_go.txt"), 'w') as file:
         file.write("No touching")
 
+print("created folders")
 
 #break
 SCOPES = ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/gmail.readonly"]
@@ -39,4 +40,8 @@ if not creds or not creds.valid:
     with open(token_file, "w") as token:
         token.write(creds.to_json())
 
-            
+print("setup completed")
+
+
+
+#CMAKE_ARGS="-DGGML_METAL=on" pip install --force-reinstall --upgrade --no-cache-dir  -v "llama_cpp_python==0.2.83"    
