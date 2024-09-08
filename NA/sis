@@ -5,3 +5,16 @@ for i in range(101):
     sys.stdout.write(f"\rProgress: {i}%")
     sys.stdout.flush()  # Ensure immediate output
     time.sleep(0.1)     # Simulate some delay (0.1 seconds)
+
+    """
+funny = ""
+if Person.lower() == "full":
+      funny = personality(question)
+      funny = re.sub(r"\(.*?\)", "", funny)
+if Person.lower() == "limited":
+      if random.randint(1,11) == 1:
+            funny = personality(question)
+            funny = re.sub(r"\(.*?\)", "", funny)
+
+
+"""

@@ -11,6 +11,7 @@ import pyaudio
 import numpy as np
 import sys
 import random
+import pyvolume
 
 from modules.clock import *
 from modules.youtube import *
@@ -70,8 +71,8 @@ def personality(question):
 def listen():
       p = pyaudio.PyAudio()
       mic_stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
-      wake_up = Model(wakeword_models=["E:\Brian\Grain\sounds\grain.onnx"])
-      
+      wake_up = Model(wakeword_models=["./sounds/grain.onnx"])
+
       def transcribe():
             r = sr.Recognizer()
             with sr.Microphone() as source:
@@ -86,12 +87,16 @@ def listen():
             confedence = prediction["grain"]*100000
             confedence = round(confedence, 3)
             sys.stdout.write(f"\r{str(confedence)}")
-            sys.stdout.flush()  # Ensure immediate output
-            if confedence >= 500:
+            sys.stdout.flush()
+            #Threshold
+            if confedence >= 1000:
+                  pyvolume.custom(percent=0)
                   print()
                   request = transcribe()
+                  pyvolume.custom(percent=30)
                   response = nlp(question=request)
                   action(response)
+                  wake_up.reset()
 
 
 def action(command):
@@ -167,16 +172,3 @@ while True:
 
 
 #CMAKE_ARGS="-DGGML_METAL=on" pip install --force-reinstall --upgrade --no-cache-dir  -v "llama_cpp_python==0.2.83"    
-""""
-
-funny = ""
-if Person.lower() == "full":
-      funny = personality(question)
-      funny = re.sub(r"\(.*?\)", "", funny)
-if Person.lower() == "limited":
-      if random.randint(1,11) == 1:
-            funny = personality(question)
-            funny = re.sub(r"\(.*?\)", "", funny)
-
-
-"""
