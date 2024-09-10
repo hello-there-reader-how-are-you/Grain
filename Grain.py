@@ -1,23 +1,27 @@
 from llama_cpp import Llama
+from styletts2 import tts
+
+import speech_recognition as sr
+import openwakeword
+from openwakeword.model import Model
+
+import sys
 import re
 import time
 import datetime
-from styletts2 import tts
 import threading
-import speech_recognition as sr
-from openwakeword import *
-from openwakeword.model import Model
-import pyaudio
 import numpy as np
-import sys
 import random
+import json
+
+import pyaudio
 import pyvolume
 
 from modules.clock import *
 from modules.youtube import *
-from Prompt import *
 from modules.calender import *
 from modules.mail import *
+from Prompt import *
 
 PATH_TO_NLP_MODEL = "./models/Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
@@ -27,6 +31,13 @@ jukebox = yt()
 watch = clock()
 cal = calender()
 postman = mailbox()
+
+with open("holdover.json", "r") as file:
+    HOLDOVER = json.load(file)
+
+def hold():
+      with open("holdover.json", "w") as json_file:
+            json.dump(HOLDOVER, json_file)
 
 Person = "Off"                         # Full, Limited, Off,
 
@@ -39,7 +50,7 @@ llm_Grain = llm_nlp
 
 def nlp(question):
       x = llm_nlp(
-            PROMPT_INSTRUCTION.format( datetime.datetime.now().strftime("%A"), datetime.datetime.now().strftime("%m/%d/%Y"), datetime.datetime.now().strftime("%H:%M:%S"), datetime.datetime.now().strftime("%Y-%m-%d"), question),
+            PROMPT_INSTRUCTION.format(Day_Of_Week= datetime.datetime.now().strftime("%A"), Date= datetime.datetime.now().strftime("%m/%d/%Y"), Time =datetime.datetime.now().strftime("%H:%M:%S"), Tomorrow= datetime.datetime.now().strftime("%Y-%m-%d"), User_Input= question),
             max_tokens=400,
             seed=420,
             echo=False,
@@ -59,7 +70,7 @@ def nlp(question):
 
 def personality(question):
       x = llm_Grain(
-            PROMPT_GRAIN.format( datetime.datetime.now().strftime("%A"), datetime.datetime.now().strftime("%m/%d/%Y"), datetime.datetime.now().strftime("%H:%M:%S"), datetime.datetime.now().strftime("%Y-%m-%d"), question),
+            PROMPT_GRAIN.format(Day_Of_Week= datetime.datetime.now().strftime("%A"), Date= datetime.datetime.now().strftime("%m/%d/%Y"), Time= datetime.datetime.now().strftime("%H:%M:%S"), User_Input= question),
             #temperature=0.3
             max_tokens=400,
             stop= ["<|im_end|>", "|</assistant|>", "<|end_of_text|>"],
@@ -93,7 +104,8 @@ def listen():
                   pyvolume.custom(percent=0)
                   print()
                   request = transcribe()
-                  pyvolume.custom(percent=30)
+                  pyvolume.custom(percent=HOLDOVER["volume"])
+                  hold()
                   response = nlp(question=request)
                   action(response)
                   wake_up.reset()

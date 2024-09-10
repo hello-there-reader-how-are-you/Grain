@@ -9,5 +9,5 @@ num2words
 python-vlc
 youtube_search
 yt_dlp
-
+HomeAssistant-API
 openwakeword

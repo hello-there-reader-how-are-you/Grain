@@ -18,7 +18,12 @@ if not os.path.exists("./ignore_me"):
     with open(os.path.join("ignore_me", "this_is_where_creds_go.txt"), 'w') as file:
         file.write("No touching")
 
-print("created folders")
+if not os.path.exists("holdover.json"):
+    with open("holdover.json", 'w') as file:
+        file.write('{"volume":30}')
+
+print("created folders & files")
+
 
 #break
 SCOPES = ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/gmail.readonly"]
@@ -41,7 +46,6 @@ if not creds or not creds.valid:
         token.write(creds.to_json())
 
 print("setup completed")
-
 
 
 #CMAKE_ARGS="-DGGML_METAL=on" pip install --force-reinstall --upgrade --no-cache-dir  -v "llama_cpp_python==0.2.83"    
