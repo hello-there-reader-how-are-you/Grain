@@ -47,7 +47,7 @@ def clv_play(file_path):
 
 from llama_cpp import Llama
 import time
-from testing_prompt import *
+from NA.testing_prompt import *
 #alt is best version with corrections
 
 #--override-kv tokenizer.ggml.pre=str:tekken

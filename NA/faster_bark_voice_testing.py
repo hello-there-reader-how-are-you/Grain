@@ -28,7 +28,7 @@ def speak(lines):
 
 from llama_cpp import Llama
 import time
-from testing_prompt import *
+from NA.testing_prompt import *
 #alt is best version with corrections
 
 llm = Llama("./models/gemma-2-2b-it.q4_k_m.gguf", n_gpu_layers=-1)
