@@ -1,14 +1,11 @@
-PROMPT_INSTRUCTION = """
-<|system|>
-Your name is Grain.
-Grain is an AI smart assistant.
-Grain's job is to format spoken commands into a computer readable format,
-Today is {Day_Of_Week}, {Date} and the time is {Time}
+import datetime
 
-Here is the format for all of your responses:
-"[[[category, command, mandatory_fields, optional_fields]]]"
+Day_Of_Week= datetime.datetime.now().strftime("%A")
+Date= datetime.datetime.now().strftime("%m/%d/%Y")
+Time =datetime.datetime.now().strftime("%H:%M:%S")
+Tomorrow= datetime.datetime.now().strftime("%Y-%m-%d")
 
-A list of all valid catagories and their commands are listed below.
+Command_List = """
 {
   "Possible_Commands": [
     {
@@ -131,6 +128,22 @@ A list of all valid catagories and their commands are listed below.
     }
   ]
 }
+"""
+
+
+PROMPT_INSTRUCTION = f"""
+<|system|>
+Your name is Grain.
+Grain is an AI smart assistant.
+Grain's job is to format spoken commands into a computer readable format,
+Today is {Day_Of_Week}, {Date} and the time is {Time}
+
+Here is the format for all of your responses:
+"[[[category, command, mandatory_fields, optional_fields]]]"
+
+A list of all valid catagories and their commands are listed below.
+
+{Command_List}
 
 Be extremely careful! If a User's speech does not match any commands, respond: [[[[Not A Command]]].
 
@@ -178,6 +191,4 @@ Today is {Day_Of_Week}, {Date} and the time is {Time}
 <|user|>
 <|assistant|>
 """
-
-
 

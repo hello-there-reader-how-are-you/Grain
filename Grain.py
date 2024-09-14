@@ -2,7 +2,6 @@ from llama_cpp import Llama
 from styletts2 import tts
 
 import speech_recognition as sr
-import openwakeword
 from openwakeword.model import Model
 
 import sys
