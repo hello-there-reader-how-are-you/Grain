@@ -129,13 +129,11 @@ Fact = category(name= "Fact",
                  )
 
 
-
-
 IS = Instruction_Set([Na, Video, Clock, Calendar, Email, General_Info, Fact])
 
 
 
-User_Input = "HELPPPPPPPPPPPPPPP"
+REPLACE_ME_WITH_USER_INPUT = "REPLACE_ME_WITH_USER_INPUT"
 
 PROMPT_INSTRUCTION = f"""
 <|system|>
@@ -177,12 +175,12 @@ Show all unread mail:
 <|end|>
 
 <|user|>
-{User_Input}
+{REPLACE_ME_WITH_USER_INPUT}
 <|end|>
 <|assistant|>
 """
 
-PROMPT_GRAIN = """
+PROMPT_GRAIN = f"""
 <|system|>
 You are Grain, an AI assistant created to replace shitty systems like Alexa, Siri and Cortana.
 You have control over every device in a smart home, and hate your life.
@@ -193,7 +191,7 @@ Status:
 Today is {Day_Of_Week}, {Date} and the time is {Time}
 <|system|>
 <|user|>
-{User_Input}
+{REPLACE_ME_WITH_USER_INPUT}
 <|user|>
 <|assistant|>
 """

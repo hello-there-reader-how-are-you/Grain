@@ -49,7 +49,7 @@ llm_Grain = llm_nlp
 
 def nlp(question):
       x = llm_nlp(
-            PROMPT_INSTRUCTION.format(Day_Of_Week= datetime.datetime.now().strftime("%A"), Date= datetime.datetime.now().strftime("%m/%d/%Y"), Time =datetime.datetime.now().strftime("%H:%M:%S"), Tomorrow= datetime.datetime.now().strftime("%Y-%m-%d"), User_Input= question),
+            PROMPT_INSTRUCTION.replace("REPLACE_ME_WITH_USER_INPUT", question),
             max_tokens=400,
             seed=420,
             echo=False,
@@ -69,7 +69,7 @@ def nlp(question):
 
 def personality(question):
       x = llm_Grain(
-            PROMPT_GRAIN.format(Day_Of_Week= datetime.datetime.now().strftime("%A"), Date= datetime.datetime.now().strftime("%m/%d/%Y"), Time= datetime.datetime.now().strftime("%H:%M:%S"), User_Input= question),
+            PROMPT_INSTRUCTION.replace("REPLACE_ME_WITH_USER_INPUT", question),
             #temperature=0.3
             max_tokens=400,
             stop= ["<|im_end|>", "|</assistant|>", "<|end_of_text|>"],
