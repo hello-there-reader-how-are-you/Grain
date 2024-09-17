@@ -13,6 +13,7 @@ import numpy as np
 import random
 import json
 
+
 import pyaudio
 import pyvolume
 
@@ -24,6 +25,8 @@ from Prompt import *
 
 PATH_TO_NLP_MODEL = "./models/Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
+
+SANDBOXING = True # Sandboxing creates a new thread for each action (I have not fixed the fact that some actions spawn threads. This means nested threading may be present [This is Bad])
 
 mouth = tts.StyleTTS2()
 jukebox = yt()
@@ -40,7 +43,7 @@ def hold():
 
 Person = "Off"                         # Full, Limited, Off,
 
-llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1)
+llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
 
 print("\n\n\n")
 llm_Grain = llm_nlp
@@ -49,7 +52,7 @@ llm_Grain = llm_nlp
 
 def nlp(question):
       x = llm_nlp(
-            PROMPT_INSTRUCTION.replace("REPLACE_ME_WITH_USER_INPUT", question),
+            PROMPT_INSTRUCTION.replace(REPLACE_ME_WITH_USER_INPUT, question),
             max_tokens=400,
             seed=420,
             echo=False,
@@ -69,7 +72,7 @@ def nlp(question):
 
 def personality(question):
       x = llm_Grain(
-            PROMPT_INSTRUCTION.replace("REPLACE_ME_WITH_USER_INPUT", question),
+            PROMPT_INSTRUCTION.replace(REPLACE_ME_WITH_USER_INPUT, question),
             #temperature=0.3
             max_tokens=400,
             stop= ["<|im_end|>", "|</assistant|>", "<|end_of_text|>"],
@@ -106,7 +109,10 @@ def listen():
                   pyvolume.custom(percent=HOLDOVER["volume"])
                   hold()
                   response = nlp(question=request)
-                  action(response)
+                  if SANDBOXING == True:
+                        threading.Thread(target=action, args=(response,), daemon=True).start()
+                  else:
+                        action(response)
                   wake_up.reset()
 
 
