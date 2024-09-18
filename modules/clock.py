@@ -15,7 +15,7 @@ class clock:
     def time(self):
         return datetime.datetime.now().strftime("%I:%M:%S %p")
     def time_pretty(self):
-        return f"{num2words(datetime.datetime.now().strftime("%I"))} {num2words(datetime.datetime.now().strftime("%M"))} {datetime.datetime.now().strftime("%p")} "
+        return f"{num2words(datetime.datetime.now().strftime("%I"))} {num2words(datetime.datetime.now().strftime("%M"))} {datetime.datetime.now().strftime("%p")}"
     def time_military(self):
         return datetime.datetime.now().strftime("%H:%M%S")
     def day(self):

@@ -11,3 +11,6 @@ youtube_search
 yt_dlp
 HomeAssistant-API
 openwakeword
+pyaudio #for linux: sudo apt install python3-pyaudio
+pyvolume
+SpeechRecognition

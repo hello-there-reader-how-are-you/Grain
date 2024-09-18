@@ -22,7 +22,7 @@ from modules.calender import *
 from modules.mail import *
 from Prompt import *
 
-PATH_TO_NLP_MODEL = "./models/Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
+PATH_TO_NLP_MODEL = "./models/Phi-3-mini-4k-instruct-q4.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
 
 mouth = tts.StyleTTS2()
