@@ -1,5 +1,15 @@
 import os
+
+step = input("Did you already install requrments.txt (y or n): ").lower()
+if "n" in step:
+    os.system('pip install -r requirements.txt --break-system-packages')
+    print("\n\n\n")
+    print('Got to "https://console.cloud.google.com/apis/dashboard?project=gifted-course-430810-q2" to retrieve a credentials.json file (must be renamed)')
+    exit()
+
 #https://console.cloud.google.com/apis/dashboard?project=gifted-course-430810-q2
+#Credentials --> Oath client id
+
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
@@ -16,7 +26,7 @@ if not os.path.exists("./ignore_me"):
     print("Folder 'ignore_me' created.")
 
     with open(os.path.join("ignore_me", "this_is_where_creds_go.txt"), 'w') as file:
-        file.write("No touching")
+        file.write('No touching \n\n User Must Supply "credentials.json", Can be aquired at: https://console.cloud.google.com/apis/dashboard?project=gifted-course-430810-q2 \n\n "token.json" will be created automaticaly through setup.py')
 
 if not os.path.exists("holdover.json"):
     with open("holdover.json", 'w') as file:
@@ -41,7 +51,12 @@ if not creds or not creds.valid:
         creds.refresh(Request())
     else:
         flow = InstalledAppFlow.from_client_secrets_file(cred_file, SCOPES)
-        creds = flow.run_local_server(port=0)
+        #creds = flow.run_local_server(port=0)
+        cred = flow.run_local_server(host='localhost', 
+                                     port=8088, 
+                                     authorization_prompt_message='Please visit this URL: {url}', 
+                                     success_message='The auth flow is complete; you may close this window.', 
+                                     open_browser=False)
     with open(token_file, "w") as token:
         token.write(creds.to_json())
 
