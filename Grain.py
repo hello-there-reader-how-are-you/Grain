@@ -1,3 +1,6 @@
+#https://stackoverflow.com/questions/67540413/f-string-unmatched-in-line-with-function-call
+
+
 from llama_cpp import Llama
 from styletts2 import tts
 
