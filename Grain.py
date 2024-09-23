@@ -1,6 +1,3 @@
-#https://stackoverflow.com/questions/67540413/f-string-unmatched-in-line-with-function-call
-
-
 from llama_cpp import Llama
 from styletts2 import tts
 
@@ -25,7 +22,7 @@ from modules.calender import *
 from modules.mail import *
 from Prompt import *
 
-PATH_TO_NLP_MODEL = "./models/Phi-3-mini-4k-instruct-q4.gguf"
+PATH_TO_NLP_MODEL = "./models/tinydolphin-2.8-1.1b.Q3_K_L.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
 
 mouth = tts.StyleTTS2()
@@ -43,7 +40,8 @@ def hold():
 
 Person = "Off"                         # Full, Limited, Off,
 
-llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1)
+#llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1)
+llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL)
 
 print("\n\n\n")
 llm_Grain = llm_nlp
@@ -78,7 +76,7 @@ def personality(question):
             stop= ["<|im_end|>", "|</assistant|>", "<|end_of_text|>"],
       )["choices"][0]["text"]
       print(x)
-      return x
+      return xtflite
 
 
 def listen():
