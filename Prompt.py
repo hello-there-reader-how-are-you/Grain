@@ -118,7 +118,7 @@ Email = category(name= "Email",
 
 General_Info = category(name= "General Info", 
                  commands= [
-                     command("AI", description="Provides general AI-generated answers or responses."),
+                     command("AI", mandatory_fields=["Reply"], description="Provides general AI-generated answers or responses."),
                      ]
                  )
 
