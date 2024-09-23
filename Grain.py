@@ -1,8 +1,10 @@
-from llama_cpp import Llama
-from styletts2 import tts
+#Welcome
 
-import speech_recognition as sr
-from openwakeword.model import Model
+from modules.clock import *
+from modules.youtube import *
+from modules.calender import *
+from modules.mail import *
+from Prompt import *
 
 import sys
 import re
@@ -13,20 +15,21 @@ import numpy as np
 import random
 import json
 
+from llama_cpp import Llama
+from styletts2 import tts
+
+import speech_recognition as sr
+from openwakeword.model import Model
 
 import pyaudio
 import pyvolume
 
-from modules.clock import *
-from modules.youtube import *
-from modules.calender import *
-from modules.mail import *
-from Prompt import *
 
 PATH_TO_NLP_MODEL = "./models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
 
 SANDBOXING = True # Sandboxing creates a new thread for each action (I have not fixed the fact that some actions spawn threads. This means nested threading may be present [This is Bad])
+GPU = True
 
 mouth = tts.StyleTTS2()
 jukebox = yt()
@@ -43,7 +46,9 @@ def hold():
 
 Person = "Off"                         # Full, Limited, Off,
 
-llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
+if GPU:
+      llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
+else: llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_ctx=2048)
 
 print("\n\n\n")
 llm_Grain = llm_nlp

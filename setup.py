@@ -35,6 +35,13 @@ if not os.path.exists("holdover.json"):
 print("created folders & files")
 
 
+import openwakeword
+from openwakeword.model import Model
+
+openwakeword.utils.download_models()
+print("downloaded open-wake-word models")
+
+
 #break
 SCOPES = ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/gmail.readonly"]
 

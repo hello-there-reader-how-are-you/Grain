@@ -11,6 +11,7 @@ Grain is a voice based ai assistant written fully in python.
 - Gmail Integration
 - Clocks, Alarms, Timers and more
 - Youtube Integration for music and videos
+- Home Assistant Integration
 
 ## Half:
 - Timers: Need names.
