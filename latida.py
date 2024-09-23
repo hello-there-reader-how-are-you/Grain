@@ -3,8 +3,8 @@ import re
 import datetime
 from Prompt import *
 
-PATH_TO_NLP_MODEL = "./models/dolphin-2_6-phi-2.Q2_K.gguf"
-llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL)
+PATH_TO_NLP_MODEL = "./models/gemma-2-2b-it-abliterated-Q2_K_L.gguf"
+llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
 
 
 
@@ -18,4 +18,8 @@ def nlp(question):
       )["choices"][0]["text"]
       print(x)
 
+print("\n\n\n")
+nlp("play radio gaga by queen")
 nlp("what time is it?")
+nlp("what in my email")
+nlp("Grain, who are you?")

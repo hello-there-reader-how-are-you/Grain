@@ -82,7 +82,7 @@ class Instruction_Set:
         return self.json
 
         
-Na = category("Not a Command", command("Not_a_Command", description="Anything Command not present on this list"))
+Na = category("Not a Command", command("Not_a_Command", description="Any Command not present on this list"))
 
 Video = category(name= "Video", 
                  commands= [
@@ -116,9 +116,9 @@ Email = category(name= "Email",
                      ]
                  )
 
-General_Info = category(name= "General Info", 
+General_Info = category(name= "Question", 
                  commands= [
-                     command("AI", mandatory_fields=["Reply"], description="Provides general AI-generated answers or responses."),
+                     command("AI", mandatory_fields=["Reply"], description="Provides AI-generated answers or responses to a user's request. This may contain any style response the user requests."),
                      ]
                  )
 
@@ -142,7 +142,7 @@ Grain is an AI smart assistant.
 Grain's job is to format spoken commands into a computer readable format,
 Today is {Day_Of_Week}, {Date} and the time is {Time}
 
-Here is the format for all of your responses:
+Here is the mandatory format for all responses:
 "[[[category, command, mandatory_fields, optional_fields]]]"
 
 A list of all valid catagories and their commands are listed below.

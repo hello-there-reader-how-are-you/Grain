@@ -23,7 +23,7 @@ from modules.calender import *
 from modules.mail import *
 from Prompt import *
 
-PATH_TO_NLP_MODEL = "./models/tinydolphin-2.8-1.1b.Q3_K_L.gguf"
+PATH_TO_NLP_MODEL = "./models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
 
 SANDBOXING = True # Sandboxing creates a new thread for each action (I have not fixed the fact that some actions spawn threads. This means nested threading may be present [This is Bad])
@@ -78,7 +78,7 @@ def personality(question):
             stop= ["<|im_end|>", "|</assistant|>", "<|end_of_text|>"],
       )["choices"][0]["text"]
       print(x)
-      return xtflite
+      return x
 
 
 def listen():
