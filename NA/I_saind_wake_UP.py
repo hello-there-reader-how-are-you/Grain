@@ -6,7 +6,7 @@ import numpy as np
 p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
 
-model = Model(wakeword_models=["E:\Brian\Grain\sounds\grain.onnx"])
+model = Model(wakeword_models=["./sounds/grain.onnx"])
 
 
 while True:
