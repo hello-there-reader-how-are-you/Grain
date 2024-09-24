@@ -25,11 +25,11 @@ import pyaudio
 import pyvolume
 
 
-PATH_TO_NLP_MODEL = "./models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+PATH_TO_NLP_MODEL = "./models/gemma-2-2b-it-abliterated-Q2_K_L.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
 
 SANDBOXING = True # Sandboxing creates a new thread for each action (I have not fixed the fact that some actions spawn threads. This means nested threading may be present [This is Bad])
-GPU = True
+GPU = False
 
 mouth = tts.StyleTTS2()
 jukebox = yt()
@@ -89,7 +89,7 @@ def personality(question):
 def listen():
       p = pyaudio.PyAudio()
       mic_stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
-      wake_up = Model(wakeword_models=["./sounds/grain.onnx", "./sounds/Hey_Grain.onnx"])
+      wake_up = Model(wakeword_models=["./sounds/grain.onnx", "./sounds/Hey_Grain.onnx"], inference_framework="onnx")
 
       def transcribe():
             r = sr.Recognizer()
