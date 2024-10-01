@@ -20,16 +20,23 @@ from styletts2 import tts
 
 import speech_recognition as sr
 from openwakeword.model import Model
+import noisereduce as nr
 
 import pyaudio
 import pyvolume
 
+# Fix voice threshold
 
 PATH_TO_NLP_MODEL = "./models/gemma-2-2b-it-abliterated-Q2_K_L.gguf"
+#PATH_TO_NLP_MODEL = "./models/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+#PATH_TO_NLP_MODEL = "./models/dolphin-2.9.3-mistral-nemo-12b.Q5_K_M.gguf"
 PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
 
 SANDBOXING = True # Sandboxing creates a new thread for each action (I have not fixed the fact that some actions spawn threads. This means nested threading may be present [This is Bad])
-GPU = False
+GPU = True
+NOISE_SUPP = True
+
+MIN_CONFIDENCE = 700
 
 mouth = tts.StyleTTS2()
 jukebox = yt()
@@ -48,7 +55,8 @@ Person = "Off"                         # Full, Limited, Off,
 
 if GPU:
       llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
-else: llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_ctx=2048)
+else: 
+      llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_ctx=2048)
 
 print("\n\n\n")
 llm_Grain = llm_nlp
@@ -101,13 +109,16 @@ def listen():
                   return text
 
       while True:
-            prediction = wake_up.predict(np.frombuffer(mic_stream.read(1, exception_on_overflow= False), dtype=np.uint16))
-            confedence = prediction["grain"]*100000
+            if NOISE_SUPP:
+                  prediction = wake_up.predict(np.frombuffer(mic_stream.read(1, exception_on_overflow= False), dtype=np.uint16))
+            else:
+                  prediction = wake_up.predict(np.frombuffer(mic_stream.read(1, exception_on_overflow= False), dtype=np.uint16))
+            confedence = (prediction["grain"]*100000) + (prediction["Hey_Grain"]*100000)
             confedence = round(confedence, 3)
             sys.stdout.write(f"\r{str(confedence)}")
             sys.stdout.flush()
-            #Threshold
-            if confedence >= 1000:
+            #TO BE FIXED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if confedence >= MIN_CONFIDENCE:
                   pyvolume.custom(percent=0)
                   print()
                   request = transcribe()
@@ -119,7 +130,6 @@ def listen():
                   else:
                         action(response)
                   wake_up.reset()
-
 
 def action(command):
       if type(command) != list: 

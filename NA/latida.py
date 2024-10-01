@@ -1,7 +1,11 @@
 from llama_cpp import Llama
 import re
 import datetime
+import sys
+
+sys.path.append('.')
 from Prompt import *
+
 
 PATH_TO_NLP_MODEL = "./models/gemma-2-2b-it-abliterated-Q2_K_L.gguf"
 llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
