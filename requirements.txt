@@ -1,0 +1,16 @@
+llama-cpp-python
+styletts2
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+pytz
+datetime
+num2words
+python-vlc
+youtube_search
+yt_dlp
+HomeAssistant-API
+openwakeword
+pyaudio #for linux: sudo apt install python3-pyaudio
+pyvolume
+SpeechRecognition

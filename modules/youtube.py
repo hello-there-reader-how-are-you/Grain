@@ -69,7 +69,7 @@ class yt:
         try: os.remove(self.Full_Name)
         except: pass
         print(self.search_term)
-        self.ydl.download(f"https://youtube.com{YoutubeSearch(self.search_term, max_results=1).to_dict()[0]["url_suffix"]}")
+        self.ydl.download(f"https://youtube.com{YoutubeSearch(self.search_term, max_results=1).to_dict()[0]['url_suffix']}")
 
 
         self.media = self.vlc_instance.media_new(self.Full_Name)

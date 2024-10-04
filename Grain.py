@@ -1,17 +1,42 @@
-from llama_cpp import Llama
-import re
-import time
-import datetime
-from styletts2 import tts
+#Welcome
 
 from modules.clock import *
 from modules.youtube import *
-from Prompt import *
 from modules.calender import *
 from modules.mail import *
+from Prompt import *
 
-PATH_TO_NLP_MODEL = "models\Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
-PATH_TO_PERSONALITY_MODEL = "models\Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
+import sys
+import re
+import time
+import datetime
+import threading
+import numpy as np
+import random
+import json
+
+from llama_cpp import Llama
+from styletts2 import tts
+
+import speech_recognition as sr
+from openwakeword.model import Model
+import noisereduce as nr
+
+import pyaudio
+import pyvolume
+
+# Fix voice threshold
+
+PATH_TO_NLP_MODEL = "./models/gemma-2-2b-it-abliterated-Q2_K_L.gguf"
+#PATH_TO_NLP_MODEL = "./models/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+#PATH_TO_NLP_MODEL = "./models/dolphin-2.9.3-mistral-nemo-12b.Q5_K_M.gguf"
+PATH_TO_PERSONALITY_MODEL = PATH_TO_NLP_MODEL
+
+SANDBOXING = True # Sandboxing creates a new thread for each action (I have not fixed the fact that some actions spawn threads. This means nested threading may be present [This is Bad])
+GPU = True
+NOISE_SUPP = True
+
+MIN_CONFIDENCE = 700
 
 mouth = tts.StyleTTS2()
 jukebox = yt()
@@ -19,28 +44,38 @@ watch = clock()
 cal = calender()
 postman = mailbox()
 
-#speech = "Hey Grain, set a time for 5 seconds"
-#speech = "Play radio gaga by queen"
-llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1)
-#llm_Grain = llm_nlp
+with open("holdover.json", "r") as file:
+    HOLDOVER = json.load(file)
+
+def hold():
+      with open("holdover.json", "w") as json_file:
+            json.dump(HOLDOVER, json_file)
+
+Person = "Off"                         # Full, Limited, Off,
+
+if GPU:
+      llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1, n_ctx=2048)
+else: 
+      llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_ctx=2048)
+
 print("\n\n\n")
-llm_Grain = Llama(model_path=PATH_TO_PERSONALITY_MODEL, n_gpu_layers=-1)
+llm_Grain = llm_nlp
 
 #print("\n\n\n\n\n\n")
 
 def nlp(question):
       x = llm_nlp(
-            PROMPT_INSTRUCTION.format( datetime.datetime.now().strftime("%A"), datetime.datetime.now().strftime("%m/%d/%Y"), datetime.datetime.now().strftime("%H:%M:%S"), datetime.datetime.now().strftime("%Y-%m-%d"), question),
+            PROMPT_INSTRUCTION.replace(REPLACE_ME_WITH_USER_INPUT, question),
             max_tokens=400,
             seed=420,
             echo=False,
-            stop= ["<|end|>"],
+            stop= ["<|end|>", "|</assistant|>", "<|end_of_text|>"],
       )["choices"][0]["text"]
       print(x)
-      try: x = f"{re.search(r'\[\[.*?\[(.*?)\].*?\]\]', x).group(1)}".split(", ")
+      try: x = str(re.search(r'\[\[.*?\[(.*?)\].*?\]\]', x).group(1)).split(", ")
       except: 
             #print("faild to find [[[command]]], lowering confedence")
-            try: x = f"{re.findall(r'\[(?![^\[\]]*\[)([^\[\]]+)\]', x)[-1]}".split(", ")
+            try: x = str(re.findall(r'\[(?![^\[\]]*\[)([^\[\]]+)\]', x)[-1]).split(", ")
             except: pass #print("faild to find [command], AT LOW CONDFEDENCE")
 
       if type(x) == list: x = [item for item in x if item != "None"]
@@ -50,33 +85,51 @@ def nlp(question):
 
 def personality(question):
       x = llm_Grain(
-            PROMPT_GRAIN.format(question),
+            PROMPT_INSTRUCTION.replace(REPLACE_ME_WITH_USER_INPUT, question),
             #temperature=0.3
             max_tokens=400,
-            stop= ["<|im_end|>"],
+            stop= ["<|im_end|>", "|</assistant|>", "<|end_of_text|>"],
       )["choices"][0]["text"]
       print(x)
       return x
 
-def speak(lines):
-      mouth.inference(lines, output_wav_file="voice_lines.wav")
-      def clv_play(file_path):
-            vlc_instance = vlc.Instance()
-            player = vlc_instance.media_player_new()
-            media = vlc_instance.media_new(file_path)
-            player.set_media(media)
-            player.play()
-            time.sleep(0.2)
-            duration = player.get_length()/1000
-            time.sleep(duration)
-      threading.Thread(target=clv_play, args=("./voice_lines.wav",), daemon=True).start()
 
-def ask(question):
-      command = nlp(question)
-      funny = personality(question)
-      return [command, funny]
+def listen():
+      p = pyaudio.PyAudio()
+      mic_stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
+      wake_up = Model(wakeword_models=["./sounds/grain.onnx", "./sounds/Hey_Grain.onnx"], inference_framework="onnx")
 
+      def transcribe():
+            r = sr.Recognizer()
+            with sr.Microphone() as source:
+                  print("Say something!")
+                  audio = r.listen(source)
+                  text = r.recognize_whisper(audio, language="english")
+                  print(text)
+                  return text
 
+      while True:
+            if NOISE_SUPP:
+                  prediction = wake_up.predict(np.frombuffer(mic_stream.read(1, exception_on_overflow= False), dtype=np.uint16))
+            else:
+                  prediction = wake_up.predict(np.frombuffer(mic_stream.read(1, exception_on_overflow= False), dtype=np.uint16))
+            confedence = (prediction["grain"]*100000) + (prediction["Hey_Grain"]*100000)
+            confedence = round(confedence, 3)
+            sys.stdout.write(f"\r{str(confedence)}")
+            sys.stdout.flush()
+            #TO BE FIXED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if confedence >= MIN_CONFIDENCE:
+                  pyvolume.custom(percent=0)
+                  print()
+                  request = transcribe()
+                  pyvolume.custom(percent=HOLDOVER["volume"])
+                  hold()
+                  response = nlp(question=request)
+                  if SANDBOXING == True:
+                        threading.Thread(target=action, args=(response,), daemon=True).start()
+                  else:
+                        action(response)
+                  wake_up.reset()
 
 def action(command):
       if type(command) != list: 
@@ -128,17 +181,26 @@ def action(command):
                   print(postman.unread())
       print("")
          
+def speak(lines):
+      if lines != "":
+            mouth.inference(lines, output_wav_file="voice_lines.wav")
+            def clv_play(file_path):
+                  vlc_instance = vlc.Instance()
+                  player = vlc_instance.media_player_new()
+                  media = vlc_instance.media_new(file_path)
+                  player.set_media(media)
+                  player.play()
+                  time.sleep(0.2)
+                  duration = player.get_length()/1000
+                  time.sleep(duration)
+            threading.Thread(target=clv_play, args=("./voice_lines.wav",), daemon=True).start()
 
-#text = input("Input: ")
-text = "whats on my calender for later today?"
-pln = ask(question=text)
-action(pln[0])
-speak(pln[1])
+core = threading.Thread(target=listen, daemon=True)
+core.start()
 
 
-
-print
-time.sleep(60)
+while True:
+      time.sleep(1)
 
 
 #CMAKE_ARGS="-DGGML_METAL=on" pip install --force-reinstall --upgrade --no-cache-dir  -v "llama_cpp_python==0.2.83"    

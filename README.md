@@ -1,24 +1,24 @@
-# Grain
+Grain
 
-Grain is an assistant. It is not a very good one...
+Grain is an assistant. Just, not a very good one...
 
-## Done:
-Natural Langague Processing Core.
-Calender Google
-Email Google
-Clock
-Music
+Grain is a voice based ai assistant written fully in python.
+
+## Features:
+- Wake word detection
+- Natural Language Processing
+- Google Calendar Integration
+- Gmail Integration
+- Clocks, Alarms, Timers and more
+- Youtube Integration for music and videos
+- Home Assistant Integration
 
 ## Half:
-Timers: Need names.
-Alarms: Need names.
-
+- Timers: Need names.
+- Alarms: Need names.
+- better integrate ./modules and Grain.py
 ## Planned:
-Wake word detection
-Transcription
-Personality Core
-
-Voice (tts)
-Voice processing.
-
-Body.
+- Personality Core
+- Voice notes (transcription)
+- Youtube music integration
+- Body.

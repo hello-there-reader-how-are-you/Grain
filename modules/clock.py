@@ -13,21 +13,21 @@ class clock:
     def now(self):
         return datetime.datetime.now()
     def time(self):
-        return datetime.datetime.now().strftime("%I:%M:%S %p")
+        return datetime.datetime.now().strftime('%I:%M:%S %p')
     def time_pretty(self):
-        return f"{num2words(datetime.datetime.now().strftime("%I"))} {num2words(datetime.datetime.now().strftime("%M"))} {datetime.datetime.now().strftime("%p")} "
+        return f"{num2words(datetime.datetime.now().strftime('%I'))} {num2words(datetime.datetime.now().strftime('%M'))} {datetime.datetime.now().strftime('%p')}"
     def time_military(self):
-        return datetime.datetime.now().strftime("%H:%M%S")
+        return datetime.datetime.now().strftime('%H:%M%S')
     def day(self):
         return datetime.datetime.now().today()
     def date(self):
-        return datetime.datetime.now().strftime("%m/%d/%Y")
+        return datetime.datetime.now().strftime('%m/%d/%Y')
     def date_words(self):
-        day = datetime.datetime.now().strftime("%d")
-        if datetime.datetime.now().strftime("%d"[0]) == "0":
-            day = datetime.datetime.now().strftime("%d"[1])
-        return f"{datetime.datetime.now().strftime("%A")} the {num2words(day, "ordinal_num")} of {datetime.datetime.now().strftime("%B")} the year of our lord {num2words(datetime.datetime.now().strftime("%C"))} {num2words(datetime.datetime.now().strftime("%y"))}"
-
+        day = datetime.datetime.now().strftime('%d')
+        if datetime.datetime.now().strftime('%d'[0]) == "0":
+            day = datetime.datetime.now().strftime('%d'[1])
+        return f"{datetime.datetime.now().strftime('%A')} the {num2words(day, 'ordinal_num')} of {datetime.datetime.now().strftime('%B')} the year of our lord {num2words(datetime.datetime.now().strftime('%C'))} {num2words(datetime.datetime.now().strftime('%y'))}"
+    
     def play_alarm_sound(self):
         vlc_instance = vlc.Instance()
         player = vlc_instance.media_player_new()
