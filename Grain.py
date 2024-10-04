@@ -10,6 +10,9 @@ from Prompt import *
 from modules.calender import *
 from modules.mail import *
 
+PATH_TO_NLP_MODEL = "models\Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
+PATH_TO_PERSONALITY_MODEL = "models\Meta-Llama-3.1-8B-Instruct-Q4_K_L.gguf"
+
 mouth = tts.StyleTTS2()
 jukebox = yt()
 watch = clock()
@@ -18,10 +21,10 @@ postman = mailbox()
 
 #speech = "Hey Grain, set a time for 5 seconds"
 #speech = "Play radio gaga by queen"
-llm_nlp = Llama(model_path="./models/gemma-2-2b-it.q4_k_m.gguf", n_gpu_layers=-1)
+llm_nlp = Llama(model_path=PATH_TO_NLP_MODEL, n_gpu_layers=-1)
 #llm_Grain = llm_nlp
 print("\n\n\n")
-llm_Grain = Llama("./models/dolphin-2.9.3-mistral-nemo-12b.Q2_K.gguf", n_gpu_layers=-1)
+llm_Grain = Llama(model_path=PATH_TO_PERSONALITY_MODEL, n_gpu_layers=-1)
 
 #print("\n\n\n\n\n\n")
 
