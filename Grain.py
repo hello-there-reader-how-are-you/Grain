@@ -1,9 +1,25 @@
 #Welcome
+from config import *
 
-from modules.clock import *
-from modules.youtube import *
-from modules.calender import *
-from modules.mail import *
+if clock_mod == True:
+      from modules.clock_mod import *
+      watch = clock()
+if youtube_mod == True:
+      from modules.youtube_mod import *
+      jukebox = yt()
+if tts_mod == True:
+      from modules.tts_mod import *
+if calendar_mod == True:
+      from modules.calendar_mod import *
+      cal = calendar()
+if mail_mod == True:
+      from modules.mail_mod import *
+      postman = mailbox()
+if smart_home_mod == True:
+      from modules.smart_home_mod import *
+
+
+      
 from Prompt import *
 
 import sys
@@ -16,7 +32,6 @@ import random
 import json
 
 from llama_cpp import Llama
-from styletts2 import tts
 
 import speech_recognition as sr
 from openwakeword.model import Model
@@ -38,11 +53,7 @@ NOISE_SUPP = True
 
 MIN_CONFIDENCE = 700
 
-mouth = tts.StyleTTS2()
-jukebox = yt()
-watch = clock()
-cal = calender()
-postman = mailbox()
+
 
 with open("holdover.json", "r") as file:
     HOLDOVER = json.load(file)
@@ -162,8 +173,8 @@ def action(command):
                   try: watch.alarm(command[2])
                   except: pass  
 
-      if command[0] == "Calender":
-            print("Calender!")
+      if command[0] == "Calendar":
+            print("Calendar!")
             if command[1] == "Today":
                   print("Today!")
                   print(cal.events_today_pretty())
@@ -183,17 +194,7 @@ def action(command):
          
 def speak(lines):
       if lines != "":
-            mouth.inference(lines, output_wav_file="voice_lines.wav")
-            def clv_play(file_path):
-                  vlc_instance = vlc.Instance()
-                  player = vlc_instance.media_player_new()
-                  media = vlc_instance.media_new(file_path)
-                  player.set_media(media)
-                  player.play()
-                  time.sleep(0.2)
-                  duration = player.get_length()/1000
-                  time.sleep(duration)
-            threading.Thread(target=clv_play, args=("./voice_lines.wav",), daemon=True).start()
+            threading.Thread(target=tts, args=(lines,), daemon=True).start()
 
 core = threading.Thread(target=listen, daemon=True)
 core.start()

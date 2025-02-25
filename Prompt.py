@@ -1,6 +1,8 @@
 import datetime
 import json
 
+from config import *
+
 Day_Of_Week= datetime.datetime.now().strftime("%A")
 Date= datetime.datetime.now().strftime("%m/%d/%Y")
 Time =datetime.datetime.now().strftime("%H:%M:%S")
@@ -24,8 +26,6 @@ class command:
 
     def __str__(self):
         return self.json
-
-
 
 class category:
     def __init__(self, name, commands):
@@ -81,40 +81,48 @@ class Instruction_Set:
     def __str__(self):
         return self.json
 
+IS = []
         
 Na = category("Not a Command", command("Not_a_Command", description="Any Command not present on this list"))
 
-Video = category(name= "Video", 
-                 commands= [
-                     command("Play", mandatory_fields=["Title"], description="Begins or resumes a video"),
-                     command("Pause", description="Pauses the currently playing video."),
-                     command("Stop", description="Stops the currently playing video.")
-                     ]
-                 )
+if youtube_mod == True:
+    #Video
+    IS += category(name= "Video", 
+                    commands= [
+                        command("Play", mandatory_fields=["Title"], description="Begins or resumes a video"),
+                        command("Pause", description="Pauses the currently playing video."),
+                        command("Stop", description="Stops the currently playing video.")
+                        ]
+                    )
 
-Clock = category(name= "Clock", 
-                 commands= [
-                     command("Time", description="Returns the current time."),
-                     command("Date", description="Returns today's date."),
-                     command("Timer", mandatory_fields=["seconds"], description="Sets a timer for a specified number of seconds. All requests must be converted to secconds"),
-                     command("Alarm", mandatory_fields=["hour", "minute"], description="Sets an alarm in military time (24-hour format).")
-                     ]
-                 )
+if clock_mod == True:
+    #Clock
+    IS += category(name= "Clock", 
+                    commands= [
+                        command("Time", description="Returns the current time."),
+                        command("Date", description="Returns today's date."),
+                        command("Timer", mandatory_fields=["seconds"], description="Sets a timer for a specified number of seconds. All requests must be converted to secconds"),
+                        command("Alarm", mandatory_fields=["hour", "minute"], description="Sets an alarm in military time (24-hour format).")
+                        ]
+                    )
 
-Calendar = category(name= "Calendar", 
-                 commands= [
-                     command("Today", description="Returns today's calendar events."),
-                     command("Schedule", mandatory_fields=["Name", "yyyy-mm-dd", "start_time"], optional_fields=["end_time"], description="Creates an event on the user's calendar with a name, date, start time, and end time if included"),
-                     ]
-                 )
+if calendar_mod == True:
+    #Calendar
+    IS += category(name= "Calendar", 
+                    commands= [
+                        command("Today", description="Returns today's calendar events."),
+                        command("Schedule", mandatory_fields=["Name", "yyyy-mm-dd", "start_time"], optional_fields=["end_time"], description="Creates an event on the user's calendar with a name, date, start time, and end time if included"),
+                        ]
+                    )
 
-
-Email = category(name= "Email", 
-                 commands= [
-                     command("Today", description="Lists emails received today."),
-                     command("Unread", description="Lists all unread emails."),
-                     ]
-                 )
+if mail_mod == True:
+    #Email
+    IS = category(name= "Email", 
+                    commands= [
+                        command("Today", description="Lists emails received today."),
+                        command("Unread", description="Lists all unread emails."),
+                        ]
+                    )
 
 General_Info = category(name= "Question", 
                  commands= [
@@ -129,7 +137,8 @@ Fact = category(name= "Fact",
                  )
 
 
-IS = Instruction_Set([Na, Video, Clock, Calendar, Email, General_Info, Fact])
+
+IS = Instruction_Set(IS)
 
 
 

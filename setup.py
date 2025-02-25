@@ -1,6 +1,11 @@
 import os
 
-step = input("Did you already install requrments.txt (y or n): ").lower()
+step = input("Did you already configure config_template.py? (y or n): ").lower()
+if os.path.exists("config_template.py"):
+    os.rename("config_template.py", "config.py")
+from config import *
+
+step = input("Did you already install requrments.txt? (y or n): ").lower()
 if "n" in step:
     os.system('pip install -r requirements.txt --break-system-packages')
     print("\n\n\n")
